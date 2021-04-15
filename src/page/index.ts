@@ -4,15 +4,15 @@ class Bank {
 }
 
 class Atm {
-  constructor(public bank: string, public card: number){
+  constructor(private bank: string, private card: number){
   }
-  checkCard(card: number) {
+  public checkCard(card: number) {
     if (card == this.card) {
       console.log(`${this.bank}の口座から現金を引き出します。`);
       this.cashingMoney(card);
     }
   }
-  cashingMoney(card: number){
+  private cashingMoney(card: number){
     switch (card) {
       case bank_a.card:
         bank_a.balance -= 14000 * 0.08;
@@ -31,13 +31,13 @@ class Atm {
   }
 }
 
-let bank_a = new Bank("三菱東京UFJ", 1, 300000);
-let bank_b = new Bank("ゆうちょ銀行", 2, 100000);
-let bank_c = new Bank("みずほ銀行", 3, 1000000);
+const bank_a = new Bank("三菱東京UFJ", 1, 300000);
+const bank_b = new Bank("ゆうちょ銀行", 2, 100000);
+const bank_c = new Bank("みずほ銀行", 3, 1000000);
 
-let atm_a = new Atm("三菱東京UFJ", 1);
-let atm_b = new Atm("ゆうちょ銀行", 2);
-let atm_c = new Atm("みずほ銀行", 3);
+const atm_a = new Atm("三菱東京UFJ", 1);
+const atm_b = new Atm("ゆうちょ銀行", 2);
+const atm_c = new Atm("みずほ銀行", 3);
 
 const num: string | null = prompt(`カードを選んでください。(数字で入力)\n  1.カードA　 2.カードB　 3.カードC`);
 if (num !== null) {

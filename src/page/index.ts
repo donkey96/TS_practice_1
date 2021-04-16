@@ -2,7 +2,7 @@ class Bank {
   constructor(readonly name: string, public card: number, public balance: number) {
   }
 }
-
+// ATMクラス
 class Atm {
   constructor(private bank: string, private card: number){
   }

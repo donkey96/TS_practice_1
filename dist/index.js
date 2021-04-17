@@ -3,7 +3,7 @@ class Bank {
     constructor(name, balance) {
         this.name = name;
         this.balance = balance;
-        // TODO 引き出し処理
+        // TODO 引き出し機能
         this.cashingMoney = (bank, card) => {
             let newBalance = 0;
             if (atmSpace) {
@@ -20,11 +20,11 @@ class Bank {
                             case 1:
                                 newBalance = bank.balance - textValue;
                                 break;
-                            case 2:
+                            case 2: // ５％手数料
                                 newBalance = bank.balance - textValue * 1.05;
                                 break;
-                            case 3:
-                                newBalance = bank.balance - textValue * 0.8;
+                            case 3: // 200円貰える
+                                newBalance = bank.balance - textValue + 200;
                                 break;
                             default:
                                 break;
@@ -41,9 +41,10 @@ class Bank {
                 });
             }
         };
+        // TODO 預け入れ機能
         this.depositMoney = (bank, card) => {
             if (atmSpace) {
-                atmSpace.innerHTML = `<h4>いくら預けますか</h4>
+                atmSpace.innerHTML = `<h4>預ける金額を入力して下さい</h4>
                             <input type="text" id="text">
                             <input type="button" id="deposit" value="入金">`;
                 const inputId = document.getElementById("text");
@@ -58,11 +59,12 @@ class Bank {
                                 atmSpace.innerHTML = `<h4>取引成功</h4>
                                     <p>口座残高は「${bank.balance}円」です。</p>`;
                                 break;
-                            case 2:
-                                atmSpace.innerHTML = `<h4>取引失敗</h4>
-                                    <p>只今の時間帯はお取引が出来ません。</p>`;
+                            case 2: // 200円減る
+                                bank.balance = Math.floor(bank.balance + textValue - 200);
+                                atmSpace.innerHTML = `<h4>取引成功</h4>
+                                    <p>口座残高は「${bank.balance}円」です。</p>`;
                                 break;
-                            case 3:
+                            case 3: // 預けると20％増える
                                 bank.balance = Math.floor(bank.balance + textValue * 1.2);
                                 atmSpace.innerHTML = `<h4>取引成功</h4>
                                     <p>口座残高は「${bank.balance}円」です。</p>`;
@@ -73,6 +75,12 @@ class Bank {
                     }
                 });
             }
+        };
+        // TODO 残高照会機能
+        this.checkMoney = (bank, card) => {
+            if (atmSpace)
+                atmSpace.innerHTML = `<h4>取引成功</h4>
+    <p>口座残高は「${bank.balance}円」です。</p>`;
         };
     }
     // カードの種類に応じて表示ページを変える
@@ -89,7 +97,8 @@ class Bank {
                 atmSpace.innerHTML = `<h3>${bank.name}</h3>
                             <p>パスワードを入力して下さい</p>
                             <input type="text" id="passBox">
-                            <input type="button" id="check" value="チェック"> `;
+                            <input type="button" id="check" value="チェック">`;
+                // TODO パスワードチェック機能
                 const passText = document.getElementById("passBox");
                 const checkBtn = document.getElementById("check");
                 checkBtn === null || checkBtn === void 0 ? void 0 : checkBtn.addEventListener("click", () => {
@@ -99,6 +108,7 @@ class Bank {
                                 <button class="drawer">引き出し</button>
                                 <button class="deposit">預け入れ</button>
                                 <button class="balanceCheck">残高照会</button>`;
+                        // ボタンの再設定
                         const drawerBtn = document.querySelector(".drawer");
                         drawerBtn === null || drawerBtn === void 0 ? void 0 : drawerBtn.addEventListener("click", () => {
                             this.cashingMoney(bank, card);
@@ -109,7 +119,7 @@ class Bank {
                         });
                         const balanceCheckBtn = document.querySelector(".balanceCheck");
                         balanceCheckBtn === null || balanceCheckBtn === void 0 ? void 0 : balanceCheckBtn.addEventListener("click", () => {
-                            this.cashingMoney(bank, card);
+                            this.checkMoney(bank, card);
                         });
                     }
                     else {
@@ -117,7 +127,7 @@ class Bank {
                     }
                 });
             }
-            else {
+            else { // 対象外のカード
                 atmSpace.innerHTML = `<h4>${card.bankName}はご利用頂けません。</h4>`;
             }
         }
@@ -126,13 +136,15 @@ class Bank {
         drawerBtn === null || drawerBtn === void 0 ? void 0 : drawerBtn.addEventListener("click", () => {
             this.cashingMoney(bank, card);
         });
+        // 預け入れボタン
         const depositBtn = document.querySelector(".deposit");
         depositBtn === null || depositBtn === void 0 ? void 0 : depositBtn.addEventListener("click", () => {
             this.depositMoney(bank, card);
         });
+        // 残高照会ボタン
         const balanceCheckBtn = document.querySelector(".balanceCheck");
         balanceCheckBtn === null || balanceCheckBtn === void 0 ? void 0 : balanceCheckBtn.addEventListener("click", () => {
-            this.cashingMoney(bank, card);
+            this.checkMoney(bank, card);
         });
     }
 }
@@ -148,6 +160,7 @@ class User {
         this.password = password;
     }
 }
+// インスタンス
 const bank_ufj = new Bank("三菱東京UFJ", 300000);
 const bank_yucho = new Bank("ゆうちょ銀行", 100000);
 const bank_mizuho = new Bank("みずほ銀行", 1000000);
@@ -155,11 +168,10 @@ const card_ufj = new Card("三菱東京UFJ", 1);
 const card_yucho = new Card("ゆうちょ銀行", 2);
 const card_mizuho = new Card("みずほ銀行", 3);
 const card_etc = new Card("ETCカード", 4);
-const tanaka = new User("田中", 12345678);
-const suzuki = new User("鈴木", 11111111);
-const matsui = new User("松井", 77777777);
-const takeda = new User("武田", 99999999);
-// const num: string | null = prompt(`カードを選んでください。(数字で入力)\n  1.カードA　 2.カードB　 3.カードC`);
+const tanaka = new User("田中", 1111);
+const suzuki = new User("鈴木", 1234);
+const matsui = new User("松井", 7777);
+const takeda = new User("武田", 9999);
 const atmSpace = document.getElementById("atm_space");
 const card_a = document.getElementById("card_a");
 const card_b = document.getElementById("card_b");

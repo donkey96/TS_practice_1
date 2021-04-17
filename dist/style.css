@@ -1,0 +1,64 @@
+body {
+  text-align: center;
+  padding-top: 30px;
+}
+
+h2 {
+  padding-bottom: 20px;
+}
+
+#card_a {
+  color: #fff;
+  background-color: rgb(249, 0, 0);
+  border-bottom: 5px solid darkred;
+  border-radius: 5px;
+}
+#card_a:hover {
+  color: #fff;
+  background: orange;
+  border-bottom: 2px solid darkorange;
+  border-radius: 5px;
+}
+
+#card_b {
+  color: #fff;
+  background-color: green;
+  border-bottom: 5px solid darkgreen;
+  border-radius: 5px;
+}
+#card_b:hover {
+  color: #fff;
+  background: orange;
+  border-bottom: 2px solid darkorange;
+  border-radius: 5px;
+}
+
+#card_c {
+  color: #fff;
+  background-color: darkblue;
+  border-bottom: 5px solid midnightblue;
+  border-radius: 5px;
+}
+#card_c:hover {
+  color: #fff;
+  background: orange;
+  border-bottom: 2px solid darkorange;
+  border-radius: 5px;
+}
+
+#card_d {
+  color: #fff;
+  background-color: darkgrey;
+  border-bottom: 5px solid gray;
+  border-radius: 5px;
+}
+#card_d:hover {
+  color: #fff;
+  background: orange;
+  border-bottom: 2px solid darkorange;
+  border-radius: 5px;
+}
+#atm_space {
+  padding-top: 40px;
+  margin: 0, auto;
+}

@@ -3,49 +3,49 @@ class Bank { // TODO Bankクラス
   // カードの種類に応じて表示ページを変える
   public startAtm(card: Card, bank: Bank, user: User): void {
     if (atmSpace) {
-    if (card.id == 1 || card.id == 2) {
+      if (card.id == 1 || card.id == 2) {
         atmSpace.innerHTML = `<h3>${bank.name}</h3>
                               <h4>ようこそ、${user.name} 様</h4>
                               <button class="drawer">引き出し</button>
                               <button class="deposit">預け入れ</button>
                               <button class="balanceCheck">残高照会</button>`
-    } else if (card.id == 3){
-      atmSpace.innerHTML = `<h3>${bank.name}</h3>
+      } else if (card.id == 3) {
+        atmSpace.innerHTML = `<h3>${bank.name}</h3>
                             <p>パスワードを入力して下さい</p>
                             <input type="text" id="passBox">
                             <input type="button" id="check" value="チェック">`
-      // TODO パスワードチェック機能
-      const passText = <HTMLInputElement>document.getElementById("passBox");
-      const checkBtn = document.getElementById("check");
+        // TODO パスワードチェック機能
+        const passText = <HTMLInputElement>document.getElementById("passBox");
+        const checkBtn = document.getElementById("check");
 
-      checkBtn?.addEventListener("click", () => {
-        if (parseInt(passText.value) == user.password) {
-          atmSpace.innerHTML = `<h3>${bank.name}</h3>
+        checkBtn?.addEventListener("click", () => {
+          if (parseInt(passText.value) == user.password) {
+            atmSpace.innerHTML = `<h3>${bank.name}</h3>
                                 <h4>ようこそ、${user.name} 様</h4>
                                 <button class="drawer">引き出し</button>
                                 <button class="deposit">預け入れ</button>
                                 <button class="balanceCheck">残高照会</button>`
-        // ボタンの再設定
-        const drawerBtn = document.querySelector(".drawer");
-        drawerBtn?.addEventListener("click", () => {
-          this.cashingMoney(bank, card);
+            // ボタンの再設定
+            const drawerBtn = document.querySelector(".drawer");
+            drawerBtn?.addEventListener("click", () => {
+              this.cashingMoney(bank, card);
+            });
+            const depositBtn = document.querySelector(".deposit");
+            depositBtn?.addEventListener("click", () => {
+              this.depositMoney(bank, card);
+            });
+            const balanceCheckBtn = document.querySelector(".balanceCheck");
+            balanceCheckBtn?.addEventListener("click", () => {
+              this.checkMoney(bank, card);
+            });
+          } else {
+            atmSpace.innerHTML = "<h4>パスワードが違います。取引を中止します。</h4>"
+          }
         });
-        const depositBtn = document.querySelector(".deposit");
-        depositBtn?.addEventListener("click", () => {
-          this.depositMoney(bank, card);
-        });
-        const balanceCheckBtn = document.querySelector(".balanceCheck");
-        balanceCheckBtn?.addEventListener("click", () => {
-          this.checkMoney(bank, card);
-        });
-        } else {
-          atmSpace.innerHTML = "<h4>パスワードが違います。取引を中止します。</h4>"
-        }
-      });
-    } else { // 対象外のカード
+      } else { // 対象外のカード
         atmSpace.innerHTML = `<h4>${card.bankName}はご利用頂けません。</h4>`
+      }
     }
-  }
     // 引き出しボタン
     const drawerBtn = document.querySelector(".drawer");
     drawerBtn?.addEventListener("click", () => {
@@ -64,7 +64,7 @@ class Bank { // TODO Bankクラス
   }
 
   // TODO 引き出し機能
-  private cashingMoney = (bank: Bank, card: Card): void =>{
+  private cashingMoney = (bank: Bank, card: Card): void => {
     let newBalance = 0;
     if (atmSpace) {
       atmSpace.innerHTML = `<h4>いくら引き出しますか</h4>
@@ -92,17 +92,17 @@ class Bank { // TODO Bankクラス
           if (newBalance < 0) {
             atmSpace.innerHTML = "<h4>出金が残高を超えています。取引を中止します。</h4>"
           } else {
-          bank.balance = Math.floor(newBalance)
-          atmSpace.innerHTML = `<h4>取引成功</h4>
+            bank.balance = Math.floor(newBalance)
+            atmSpace.innerHTML = `<h4>取引成功</h4>
                                 <p>口座残高は「${bank.balance}円」です。</p>`
-                                
+
           }
         }
       })
     }
   }
   // TODO 預け入れ機能
-  private depositMoney = (bank: Bank, card: Card): void =>{
+  private depositMoney = (bank: Bank, card: Card): void => {
     if (atmSpace) {
       atmSpace.innerHTML = `<h4>預ける金額を入力して下さい</h4>
                             <input type="text" id="text">
@@ -137,9 +137,9 @@ class Bank { // TODO Bankクラス
     }
   }
   // TODO 残高照会機能
-  private checkMoney = (bank: Bank, card: Card): void =>{
+  private checkMoney = (bank: Bank, card: Card): void => {
     if (atmSpace)
-    atmSpace.innerHTML = `<h4>取引成功</h4>
+      atmSpace.innerHTML = `<h4>取引成功</h4>
     <p>口座残高は「${bank.balance}円」です。</p>`
   }
 }

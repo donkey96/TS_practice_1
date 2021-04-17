@@ -8,11 +8,11 @@ class Bank {
             if (atmSpace) {
                 atmSpace.innerHTML = `<h4>いくら引き出しますか</h4>
                             <input type="text" id="text">
-                            <input type="button" id="submit" value="出金">`;
+                            <input type="button" id="cashing" value="出金">`;
                 const inputId = document.getElementById("text");
-                const submit = document.getElementById("submit");
+                const cashingBtn = document.getElementById("cashing");
                 // 出金ボタンを押した際の処理
-                submit === null || submit === void 0 ? void 0 : submit.addEventListener("click", () => {
+                cashingBtn === null || cashingBtn === void 0 ? void 0 : cashingBtn.addEventListener("click", () => {
                     const textValue = parseInt(inputId.value);
                     if (atmSpace) {
                         switch (card.id) {
@@ -41,23 +41,50 @@ class Bank {
         };
     }
     // カードの種類に応じて表示ページを変える
-    startAtm(card, bank) {
-        if (atmSpace)
-            atmSpace.innerHTML = `<h4>${bank.name}へようこそ</h4>
+    startAtm(card, bank, user) {
+        if (atmSpace) {
+            if (card.id == 1 || card.id == 2) {
+                atmSpace.innerHTML = `<h3>${bank.name}</h3>
+                              <h4>ようこそ、${user.name} 様</h4>
                               <button class="drawer">引き出し</button>
                               <button class="deposit">預け入れ</button>
-                              <button>残高照会</button>`;
+                              <button class="balanceCheck">残高照会</button>`;
+            }
+            else if (card.id == 3) {
+                atmSpace.innerHTML = `<h3>${bank.name}</h3>
+                            <p>パスワードを入力して下さい</p>
+                            <input type="text" id="passBox">
+                            <input type="button" id="check" value="チェック"> `;
+                const passText = document.getElementById("passBox");
+                const checkBtn = document.getElementById("check");
+                checkBtn === null || checkBtn === void 0 ? void 0 : checkBtn.addEventListener("click", () => {
+                    if (parseInt(passText.value) == user.password) {
+                        atmSpace.innerHTML = `<h3>${bank.name}</h3>
+                                <h4>ようこそ、${user.name} 様</h4>
+                                <button class="drawer">引き出し</button>
+                                <button class="deposit">預け入れ</button>
+                                <button class="balanceCheck">残高照会</button>`;
+                    }
+                    else {
+                        atmSpace.innerHTML = "パスワードが違います。取引を中止します。";
+                    }
+                });
+            }
+            else {
+                atmSpace.innerHTML = `<h4>${card.bankName}はご利用頂けません。</h4>`;
+            }
+        }
         // 引き出しボタン
         const drawerBtn = document.querySelector(".drawer");
         drawerBtn === null || drawerBtn === void 0 ? void 0 : drawerBtn.addEventListener("click", () => {
             this.cashingMoney(bank, card);
         });
-        const drawerBtn = document.querySelector(".drawer");
-        drawerBtn === null || drawerBtn === void 0 ? void 0 : drawerBtn.addEventListener("click", () => {
+        const depositBtn = document.querySelector(".deposit");
+        depositBtn === null || depositBtn === void 0 ? void 0 : depositBtn.addEventListener("click", () => {
             this.cashingMoney(bank, card);
         });
-        const drawerBtn = document.querySelector(".drawer");
-        drawerBtn === null || drawerBtn === void 0 ? void 0 : drawerBtn.addEventListener("click", () => {
+        const balanceCheckBtn = document.querySelector(".balanceCheck");
+        balanceCheckBtn === null || balanceCheckBtn === void 0 ? void 0 : balanceCheckBtn.addEventListener("click", () => {
             this.cashingMoney(bank, card);
         });
     }
@@ -69,18 +96,22 @@ class Card {
     }
 }
 class User {
-    constructor(name, passwprd) {
+    constructor(name, password) {
         this.name = name;
-        this.passwprd = passwprd;
+        this.password = password;
     }
 }
-const bank_a = new Bank("三菱東京UFJ", 300000);
-const bank_b = new Bank("ゆうちょ銀行", 100000);
-const bank_c = new Bank("みずほ銀行", 1000000);
+const bank_ufj = new Bank("三菱東京UFJ", 300000);
+const bank_yucho = new Bank("ゆうちょ銀行", 100000);
+const bank_mizuho = new Bank("みずほ銀行", 1000000);
 const card_ufj = new Card("三菱東京UFJ", 1);
 const card_yucho = new Card("ゆうちょ銀行", 2);
 const card_mizuho = new Card("みずほ銀行", 3);
 const card_etc = new Card("ETCカード", 4);
+const tanaka = new User("田中", 12345678);
+const suzuki = new User("鈴木", 11111111);
+const matsui = new User("松井", 77777777);
+const takeda = new User("武田", 99999999);
 // const num: string | null = prompt(`カードを選んでください。(数字で入力)\n  1.カードA　 2.カードB　 3.カードC`);
 const atmSpace = document.getElementById("atm_space");
 const card_a = document.getElementById("card_a");
@@ -88,14 +119,14 @@ const card_b = document.getElementById("card_b");
 const card_c = document.getElementById("card_c");
 const card_d = document.getElementById("card_d");
 card_a === null || card_a === void 0 ? void 0 : card_a.addEventListener("click", () => {
-    bank_a.startAtm(card_ufj, bank_a);
+    bank_ufj.startAtm(card_ufj, bank_ufj, suzuki);
 });
 card_b === null || card_b === void 0 ? void 0 : card_b.addEventListener("click", () => {
-    bank_a.startAtm(card_yucho, bank_b);
+    bank_ufj.startAtm(card_yucho, bank_yucho, matsui);
 });
 card_c === null || card_c === void 0 ? void 0 : card_c.addEventListener("click", () => {
-    bank_a.startAtm(card_mizuho, bank_c);
+    bank_ufj.startAtm(card_mizuho, bank_mizuho, tanaka);
 });
 card_d === null || card_d === void 0 ? void 0 : card_d.addEventListener("click", () => {
-    bank_a.startAtm(card_etc, bank_c);
+    bank_ufj.startAtm(card_etc, bank_mizuho, takeda);
 });

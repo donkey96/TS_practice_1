@@ -12,7 +12,7 @@ class Bank { // TODO Bankクラス
       } else if (card.id == 3) {
         atmSpace.innerHTML = `<h3>${bank.name}</h3>
                             <p>パスワードを入力して下さい</p>
-                            <input type="text" id="passBox">
+                            <input type="text" id="passBox" oninput="value = value.replace(/[０-９]/g,s => String.fromCharCode(s.charCodeAt(0) - 65248)).replace(/\D/g,'');">
                             <input type="button" id="check" value="チェック">`
         // TODO パスワードチェック機能
         const passText = <HTMLInputElement>document.getElementById("passBox");
@@ -68,7 +68,7 @@ class Bank { // TODO Bankクラス
     let newBalance = 0;
     if (atmSpace) {
       atmSpace.innerHTML = `<h4>いくら引き出しますか</h4>
-                            <input type="text" id="text">
+                            <input type="text" id="text" oninput="value = value.replace(/[０-９]/g,s => String.fromCharCode(s.charCodeAt(0) - 65248)).replace(/\D/g,'');">
                             <input type="button" id="cashing" value="出金">`
       const inputId = <HTMLInputElement>document.getElementById("text");
       const cashingBtn = document.getElementById("cashing");
@@ -91,6 +91,8 @@ class Bank { // TODO Bankクラス
           }
           if (newBalance < 0) {
             atmSpace.innerHTML = "<h4>出金が残高を超えています。取引を中止します。</h4>"
+          } else if (isNaN(newBalance)) {
+            atmSpace.innerHTML = "<h4>無効な値が入力されました。取引を中止します。</h4>"
           } else {
             bank.balance = Math.floor(newBalance)
             atmSpace.innerHTML = `<h4>取引成功</h4>
@@ -105,7 +107,7 @@ class Bank { // TODO Bankクラス
   private depositMoney = (bank: Bank, card: Card): void => {
     if (atmSpace) {
       atmSpace.innerHTML = `<h4>預ける金額を入力して下さい</h4>
-                            <input type="text" id="text">
+                            <input type="text" id="text" oninput="value = value.replace(/[０-９]/g,s => String.fromCharCode(s.charCodeAt(0) - 65248)).replace(/\D/g,'');">
                             <input type="button" id="deposit" value="入金">`
       const inputId = <HTMLInputElement>document.getElementById("text");
       const depositBtn = document.getElementById("deposit");
@@ -113,24 +115,28 @@ class Bank { // TODO Bankクラス
       depositBtn?.addEventListener("click", () => {
         const textValue = parseInt(inputId.value)
         if (atmSpace) {
-          switch (card.id) {
-            case 1:
-              bank.balance = Math.floor(bank.balance + textValue)
-              atmSpace.innerHTML = `<h4>取引成功</h4>
-                                    <p>口座残高は「${bank.balance}円」です。</p>`
-              break;
-            case 2: // 200円減る
-              bank.balance = Math.floor(bank.balance + textValue - 200)
-              atmSpace.innerHTML = `<h4>取引成功</h4>
-                                    <p>口座残高は「${bank.balance}円」です。</p>`
-              break;
-            case 3: // 預けると20％増える
-              bank.balance = Math.floor(bank.balance + textValue * 1.2)
-              atmSpace.innerHTML = `<h4>取引成功</h4>
-                                    <p>口座残高は「${bank.balance}円」です。</p>`
-              break;
-            default:
-              break;
+          if (isNaN(textValue)) {
+          atmSpace.innerHTML = "<h4>無効な値が入力されました。取引を中止します。</h4>"
+          } else {
+            switch (card.id) {
+              case 1:
+                bank.balance = Math.floor(bank.balance + textValue)
+                atmSpace.innerHTML = `<h4>取引成功</h4>
+                                      <p>口座残高は「${bank.balance}円」です。</p>`
+                break;
+              case 2: // 200円減る
+                bank.balance = Math.floor(bank.balance + textValue - 200)
+                atmSpace.innerHTML = `<h4>取引成功</h4>
+                                      <p>口座残高は「${bank.balance}円」です。</p>`
+                break;
+              case 3: // 預けると20％増える
+                bank.balance = Math.floor(bank.balance + textValue * 1.2)
+                atmSpace.innerHTML = `<h4>取引成功</h4>
+                                      <p>口座残高は「${bank.balance}円」です。</p>`
+                break;
+              default:
+                break;
+            }
           }
         }
       })
